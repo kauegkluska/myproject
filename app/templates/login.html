@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Real Estate Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_admin.css') }}">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .login-card {
+            background: white;
+            width: 400px;
+            padding: 40px;
+            border-radius: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo-box" style="margin: 0 auto 24px;">R</div>
+        <h2>Admin Login</h2>
+        <p style="color: var(--text-muted); margin-bottom: 32px;">Acesse o painel administrativo</p>
+        <form method="POST" action="{{ url_for('main.login') }}">
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label style="font-size: 12px; font-weight: 700;">USERNAME</label>
+            <input type="text" name="username" class="form-control" placeholder="admin">
+        </div>
+        <div style="text-align: left; margin-bottom: 32px;">
+            <label style="font-size: 12px; font-weight: 700;">PASSWORD</label>
+            <input type="password" name="password" class="form-control" placeholder="••••••••">
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>

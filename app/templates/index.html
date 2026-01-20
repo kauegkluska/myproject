@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon Estates | Premium Real Estate</title>
+    <link rel="stylesheet" href="./static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "lucide": "https://esm.sh/lucide"
+      }
+    }
+    </script>
+</head>
+
+<body>
+    <header id="main-header">
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="./static/img/logo.png" alt="Horizon Estates Logo" class="logo-img">
+                <span class="brand-name">Imobiliária X</span>
+            </div>
+            <nav class="desktop-nav">
+                <a href="#home">Home</a>
+                <a href="#properties">Propriedades</a>
+                <a href="#about">Sobre</a>
+                <a href="#contact">Contato</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <main id="app-content">
+        <!-- List View -->
+        <div id="list-view">
+            <section class="hero">
+
+                <div class="container">
+                    <h1>Encontre seu imóvel dos sonhos!</h1>
+                    <p>Explore nossas propriedades exclusivas nas melhores regiões</p>
+                </div>
+            </section>
+
+            <section id="properties" class="filters-section">
+                <div class="container">
+                    <div class="filters-card">
+                        <form id="filter-form" method="get" action="/">
+                            <div class="filter-group">
+                                <label for="type">Tipo</label>
+                                <select id="type" name="type">
+                                    <option value="all">All Types</option>
+                                    <option value="CASA" {{ 'selected' if filters.get('type')=='CASA' }}>Casa</option>
+                                    <option value="APARTAMENTO" {{ 'selected' if filters.get('type')=='APARTAMENTO' }}>
+                                        Apartamento</option>
+                                    <option value="PREDIO" {{ 'selected' if filters.get('type')=='PREDIO' }}>Prédio
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="transaction">Finalidade</label>
+                                <select id="transaction" name="transaction">
+                                    <option value="all">Compra ou Aluguel</option>
+                                    <option value="VENDA" {{ 'selected' if filters.get('transaction')=='VENDA' }}>Compra</option>
+                                    <option value="ALUGUEL" {{ 'selected' if filters.get('transaction')=='ALUGUEL' }}>
+                                        Aluguel</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="city">Cidade</label>
+                                <select id="city" name="city">
+                                    <option value="all">Todas as Cidades</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city }}" {{ 'selected' if filters.get('city')==city }}>
+                                        {{ city }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="max-price">Preço máximo</label>
+                                <input type="number" id="max-price" name="maxPrice"
+                                    value="{{ filters.get('maxPrice', '') }}">
+                            </div>
+                            <button type="submit" class="btn-primary">Aplicar Filtros</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section class="properties-grid-section">
+                <div class="container">
+                    <div id="properties-grid" class="properties-grid">
+                        {% for prop in properties %}
+                        <div class="property-card">
+                            <img src="{{ prop.images[0].image }}" alt="{{ prop.name }}" class="property-img">
+                            <div class="property-info">
+                                {% set type_labels = {
+                                'PREDIO': 'Prédio',
+                                'CASA': 'Casa',
+                                'APARTAMENTO': 'Apartamento'
+                                } %}
+                                <span class="property-type-tag">{{ type_labels[prop.type] }}</span>
+                                <h3 class="property-title">{{ prop.name }}</h3>
+                                <p class="property-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ prop.neighbourhood }}, {{ prop.city.replace('-', ' ') }}
+                                </p>
+                                <p class="property-price">
+                                    {% if prop.transaction == 'ALUGUEL' %}
+                                    R$ {{ "{:,.2f}".format(prop.price) }} / mês
+                                    {% else %}
+                                    R$ {{ "{:,.2f}".format(prop.price) }}
+                                    {% endif %}
+                                </p>
+                                <div class="property-specs-brief">
+                                    <span class="spec-item"><i class="fas fa-bed"></i> {{ prop.beds }}</span>
+                                    <span class="spec-item"><i class="fas fa-bath"></i> {{ prop.baths }}</span>
+                                    <span class="spec-item"><i class="fas fa-ruler"></i> {{ prop.sqmt }} m²</span>
+                                </div>
+                                <a href="{{ url_for('main.property_details', property_id=prop.id) }}"
+                                    class="btn-details">See Details</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if not properties %}
+                    <div id="no-results" class="no-results">
+                        <p>Desculpe, não há propriedades que se encaixam nesses critérios.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+
+
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Horizon Estates Logo"
+                        class="logo-img footer-logo">
+                    <span class="brand-name">Imobiliária X</span>
+                </div>
+                <p>Sempre com você para seu imóvel.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Links Rápidos </h4>
+                <a>Propriedades</a>
+                <a href="#about">Sobre</a>
+                <a href="#contact">Contato</a>
+            </div>
+
+            <div class="footer-social">
+                <h4>Siga-Nos</h4>
+                <div class="social-icons">
+                    <span>FB</span>
+                    <span>IG</span>
+                    <span>TW</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Horizon Estates. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./static/js/app.js"></script>
+</body>
+
+</html>

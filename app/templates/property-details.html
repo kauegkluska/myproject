@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ property.name }} | Imobiliária X</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Horizon Estates Logo" class="logo-img">
+                <span class="brand-name">Horizon Estates</span>
+            </div>
+            <nav class="desktop-nav">
+                <a>Home</a>
+                <a>Imóveis</a>
+                <a href="#about">Sobre</a>
+                <a href="#contact">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Detail View -->
+    <div class="container detail-container">
+        <a class="btn-back">&larr; Voltar para Imóveis</a>
+
+        <div class="detail-split-layout">
+
+            <!-- Gallery -->
+            <div class="detail-gallery-side">
+                <div class="gallery-container">
+                    <div class="gallery-slider" id="gallery-slider">
+                        {% if property.images %}
+                        {% for img in property.images %}
+                        <div class="gallery-item">
+                            <img src="{{ img.image }}" alt="{{ property.name }}" class="property-img">
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="gallery-item">
+                            <img src="/static/img/default-property.png" alt="No image available" class="property-img">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="gallery-nav">
+                        {% for img in property.images %}
+                        <div class="gallery-dot {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="detail-info-side">
+                <div class="property-detail-header">
+                    {% set type_labels = {
+                    'PREDIO': 'Prédio',
+                    'CASA': 'Casa',
+                    'APARTAMENTO': 'Apartamento'
+                    } %}
+                    <span class="property-type-tag">
+                        {{ type_labels.get(property.type, property.type) }} • {{ property.transaction }}
+                    </span>
+
+                    <h2>{{ property.name }}</h2>
+
+                    <p class="property-location">
+                        {{ property.neighbourhood }}, {{ property.city.replace('-', ' ') }}
+                    </p>
+
+                    <div class="detail-price">
+                        {% if property.transaction == 'ALUGUEL' %}
+                        R$ {{ "{:,.2f}".format(property.price) }} / mês
+                        {% else %}
+                        R$ {{ "{:,.2f}".format(property.price) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="property-specs-large">
+                    <div class="spec-large-item">
+
+                        <span class="spec-large-value"><i class="fas fa-bed"></i> {{ property.beds }}</span>
+
+                        <span>Quartos</span>
+                    </div>
+                    <div class="spec-large-item">
+                        <span class="spec-large-value"><i class="fas fa-bath"></i> {{ property.baths }}</span>
+                        <span>Banheiros</span>
+                    </div>
+                    <div class="spec-large-item">
+                        <span class="spec-large-value"><i class="fas fa-ruler"></i> {{ property.sqmt }} m²</span>
+                        <span>Tamanho</span>
+                    </div>
+                </div>
+               
+
+                <div class="detail-description">
+                    <h3>Sobre o Imóvel</h3>
+                    <p>{{ property.description or 'No description available.' }}</p>
+                </div>
+
+                <div class="detail-features">
+                    <h3>Comodidades</h3>
+                    <ul class="features-list">
+                        {% for f in property.features %}
+                        <li>{{ f.feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                 <div class="contact-card-inline">
+                    <h4>Interessado?</h4>
+                    <p>Entre em contato para agendar uma visita ou para saber mais.</p>
+                    <a href="https://wa.me/1234567890" target="_blank" class="btn-whatsapp">
+                    <i class="fas fa-message"></i> Envie uma mensagem para o nosso Whatsapp
+                    </a>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Horizon Estates Logo"
+                        class="logo-img footer-logo">
+                    <span class="brand-name">Imobiliária X</span>
+                </div>
+                <p>Sempre com você para seu imóvel.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Links Rápidos </h4>
+                <a>Propriedades</a>
+                <a href="#about">Sobre</a>
+                <a href="#contact">Contato</a>
+            </div>
+
+            <div class="footer-social">
+                <h4>Siga-Nos</h4>
+                <div class="social-icons">
+                    <span>FB</span>
+                    <span>IG</span>
+                    <span>TW</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Horizon Estates. All rights reserved.</p>
+        </div>
+    </footer>
+
+<link rel="module" href="{{ url_for('static', filename='js/app.js') }}">
+<script>
+        const slider = document.getElementById('gallery-slider');
+        const dots = document.querySelectorAll('.gallery-dot');
+
+        if (slider && dots.length) {
+            slider.addEventListener('scroll', () => {
+                const index = Math.round(slider.scrollLeft / slider.clientWidth);
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.dataset.index);
+                    slider.scrollTo({ left: index * slider.clientWidth, behavior: 'smooth' });
+                });
+            });
+        }
+</script>
+
+</body>
+
+</html>

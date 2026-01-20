@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Imobiliaria X</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_admin.css') }}">
+
+</head>
+
+<body>
+
+    <input type="radio" name="nav" id="radio-dashboard" checked>
+    <input type="radio" name="nav" id="radio-properties">
+    <input type="radio" name="nav" id="radio-users">
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-box">R</div>
+                <div class="logo-text">RealEstate<span>Pro</span></div>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item"><label for="radio-dashboard">📊 Dashboard</label></li>
+                <li class="nav-item"><label for="radio-properties">🏠 Properties</label></li>
+                <li class="nav-item"><label for="radio-users">👥 Admin Users</label></li>
+            </ul>
+
+            <div style="padding: 24px; border-top: 1px solid #1e293b;">
+                <a href="login.html" style="color: #ef4444; text-decoration: none; font-size: 14px;">🚪 Log Out</a>
+            </div>
+        </aside>
+
+        <main>
+            <header>
+                <input type="text" placeholder="Search..."
+                    style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); width: 300px;">
+                <a href="#modal-property" class="btn-primary">+ Add Property</a>
+            </header>
+
+            <div class="content-scroll">
+                <div class="tab-content content-dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Properties</div>
+                            <div class="stat-value">{{ total_properties }}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Active Listings</div>
+                            <div class="stat-value">{{ active_listings }}</div>
+                        </div>
+                    </div>
+                    <h3>Recent Activity</h3>
+                    <p>Welcome back, Admin!</p>
+                </div>
+
+                <div class="tab-content content-properties">
+                    <div class="card-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Location</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for property in properties%}
+                                <tr>
+                                    <td>{{property.name}}</td>
+                                    <td>{{property.neighbourhood}}, {{property.city}}</td>
+                                    <td>R${{property.price}}0</td>
+                                    <td>{%if property.active%}
+                                        Active
+                                        {%else%}
+                                        Unactive
+                                        {%endif%}
+                                    </td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content content-users">
+                    <div class="card-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>admin_sarah</td>
+                                    <td>Super Admin</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-property" class="modal">
+        <div class="modal-content">
+            <a href="#" class="close-modal" style="float: right; text-decoration: none;">&times;</a>
+            <h2>New Property</h2>
+            <form method="POST" action="{{ url_for('main.add_property') }}" enctype="multipart/form-data"
+                style="margin-top: 20px;">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" required>
+
+                <label>Type</label>
+                <select name="type" class="form-control" required>
+                    <option value="CASA">Casa</option>
+                    <option value="APARTAMENTO">Apartamento</option>
+                    <option value="PREDIO">Prédio</option>
+                </select>
+
+                <label>Transaction</label>
+                <select name="transaction" class="form-control" required>
+                    <option value="VENDA">Venda</option>
+                    <option value="ALUGUEL">Aluguel</option>
+                </select>
+
+                <label>City</label>
+                <input type="text" name="city" class="form-control" required>
+
+                <label>Neighborhood</label>
+                <input type="text" name="neighbourhood" class="form-control">
+
+                <label>Price</label>
+                <input type="number" step="0.01" name="price" class="form-control" required>
+
+                <label>Beds</label>
+                <input type="number" name="beds" class="form-control" required>
+
+                <label>Baths</label>
+                <input type="number" name="baths" class="form-control" required>
+
+                <label>Sqmt</label>
+                <input type="number" name="sqmt" class="form-control" required>
+
+                <label>Description</label>
+                <textarea name="description" class="form-control"></textarea>
+
+                <label>Features (comma separated)</label>
+                <input type="text" name="features" placeholder="Pool, Garage, Balcony" class="form-control">
+
+                <label>Images (multiple)</label>
+                <input type="file" name="images" multiple accept="image/*" class="form-control">
+
+                <button type="submit" class="btn-primary" style="margin-top: 20px;">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
