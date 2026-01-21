@@ -53,7 +53,7 @@
                             <div class="filter-group">
                                 <label for="type">Tipo</label>
                                 <select id="type" name="type">
-                                    <option value="all">All Types</option>
+                                    <option value="all">Todos os Tipos</option>
                                     <option value="CASA" {{ 'selected' if filters.get('type')=='CASA' }}>Casa</option>
                                     <option value="APARTAMENTO" {{ 'selected' if filters.get('type')=='APARTAMENTO' }}>
                                         Apartamento</option>
@@ -123,7 +123,7 @@
                                     <span class="spec-item"><i class="fas fa-ruler"></i> {{ prop.sqmt }} m²</span>
                                 </div>
                                 <a href="{{ url_for('main.property_details', property_id=prop.id) }}"
-                                    class="btn-details">See Details</a>
+                                    class="btn-details">Ver Detalhes</a>
                             </div>
                         </div>
                         {% endfor %}
